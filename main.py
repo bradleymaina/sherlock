@@ -1,3 +1,7 @@
+## NOTES
+# Delete the database to start a fresh 
+# In the event where someone writes a wrong first name after 
+# pressing enter , they may not go back leading to erranous database
 import sqlite3
 
 def get_db():
