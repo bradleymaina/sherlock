@@ -1,0 +1,24 @@
+{
+  "name": "sherlock",
+  "version": "1.0.0",
+  "description": "sherlock is a CRUD app that uses whatsapp-web.js to update a central datEabse as well as retreive data from the central database. It  is menu driven and therefore does not understand natural language in order to  avoid getting flagged my META.",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/bradleymaina/sherlock.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "bugs": {
+    "url": "https://github.com/bradleymaina/sherlock/issues"
+  },
+  "homepage": "https://github.com/bradleymaina/sherlock#readme",
+  "dependencies": {
+    "whatsapp-web.js": "^1.34.7"
+  }
+}
