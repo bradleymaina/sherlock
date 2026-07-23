@@ -28,7 +28,7 @@ client.on('message_create', message => {
     "*Welcome to sherlock !* 🔍 \n I am your virtual assistant who helps you to : \n 1. Search any Lecturer by name to find their phone number. \n 2. Add lecturer's details so others can find them."
 
 	if (message.body === 'Hello') {
-		// send back "pong" to the chat the message was sent in
+		// greeting message 
 		client.sendMessage(message.from, greeting);
 	}
 });
