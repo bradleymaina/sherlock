@@ -29,8 +29,10 @@ def create_table():
 def add_lecturer(first_name, last_name, phone_number):
     
     if len(phone_number) != 10 or not phone_number.isdigit():
-        print("Enter a valid phone number")
-        return
+        return{
+            "status" : "error",
+            "message" : "A phone number must be exactly 10 digits!"
+        }
     
     #what does this line do ??
     connection, cursor = get_db()
@@ -40,12 +42,27 @@ def add_lecturer(first_name, last_name, phone_number):
             INSERT INTO Lecturers (first_name, last_name, phone_number)
             VALUES (?, ?, ?)
             ''',(first_name, last_name, phone_number))
+
+        #fetch id
+        new_id = cursor.lastrowid
         
         connection.commit()
-        print(f"{first_name.capitalize()} {last_name.capitalize()} has been added to the database.")
+        return {
+            "status" : "success",
+            "data" : {
+                "id" : new_id,
+                "first_name" : first_name,
+                "last_name" : last_name,
+                "phone_number" : phone_number
+            }
+        }
+
 
     except sqlite3.IntegrityError:
-        print(f"Error: {phone_number} already exists in the database")
+        return {
+            "status" : "error",
+            "message" : "A lecturer with that phone number already exists!"
+        }
 
     finally:
         connection.close()
@@ -65,11 +82,28 @@ def lecturer_lookup(search_name):
     connection.close()
 
     if results:
-        print("\n ---Search Results---")
+        lecturer_list = []
+
         for row in results:
-            print(f"{row[1].capitalize()}\t{row[2].capitalize()}\t{row[3]}")
+            lecturer_list.append
+            (
+                {
+                "first_name": row[1],
+                "last_name": row[2],
+                "phone_number": row[3]
+                }
+            )
+            return {
+                "status": "success",
+                "count": len(lecturer_list),
+                "data": lecturer_list
+            }
+            
     else:
-        print("No Lecturer Found matching that name")
+        return {
+            "status" : "error",
+            "message" : "A lecturer by that name does not exist! "
+        }
 
 def main():
     create_table()
