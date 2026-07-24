@@ -26,11 +26,8 @@ def create_table():
     connection.commit()
     connection.close()
 
-def add_lecturer():
-    first_name = input("Enter First Name: ").strip().lower()
-    last_name = input("Enter Last Name: ").strip().lower()
-    phone_number = input("Enter Phone Number: ").strip()
-
+def add_lecturer(first_name, last_name, phone_number):
+    
     if len(phone_number) != 10 or not phone_number.isdigit():
         print("Enter a valid phone number")
         return
@@ -53,8 +50,7 @@ def add_lecturer():
     finally:
         connection.close()
 
-def lecturer_lookup():
-    search_name = input("Who are you trying to find? ").strip().lower()
+def lecturer_lookup(search_name):
     query_param = f"%{search_name}%"
 
     connection, cursor = get_db()
