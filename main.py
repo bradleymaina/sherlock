@@ -1,6 +1,7 @@
 ## NOTES 
 # In the event where someone writes a wrong first name after 
 # pressing enter , they may not go back leading to erranous database
+#add sql  functionality that allows indexing
 import sqlite3
 
 def get_db():
@@ -34,7 +35,7 @@ def add_lecturer(first_name, last_name, phone_number):
             "message" : "A phone number must be exactly 10 digits!"
         }
     
-    #what does this line do ??
+    
     connection, cursor = get_db()
 
     try:
@@ -120,7 +121,14 @@ def main():
             first_name = input("Enter First Name: ")
             last_name = input("Enter Last Name: ")
             phone_number = input("Enter Phone Number: ")
-            add_lecturer(first_name, last_name, phone_number)
+
+            option = input(f"Are you sure you want to add {first_name} {last_name} with phone {phone_number} (y/n)?").strip()
+            if option == 'y':
+                add_lecturer(first_name, last_name, phone_number)
+            elif option == 'n':
+                print("Addition cancelled!")
+            else:
+               print("Invalid choice. Enter either y or n")
         elif choice == '2':
             search_name = input("Who are you trying to find? ")
             lecturer_lookup(search_name)
