@@ -122,7 +122,7 @@ def main():
             last_name = input("Enter Last Name: ")
             phone_number = input("Enter Phone Number: ")
 
-            option = input(f"Are you sure you want to add {first_name} {last_name} with phone {phone_number} (y/n)?").strip()
+            option = input(f"Are you sure you want to add {first_name.capitalize()} {last_name.capitalize()} with phone {phone_number} (y/n)?").strip()
             if option == 'y':
                 add_lecturer(first_name, last_name, phone_number)
             elif option == 'n':
