@@ -78,14 +78,18 @@ def main():
         print("\n ===sherlock===")
         print("1. Add Lecturer")
         print("2. Search Lecturer")
-        print("3. quit")
+        print("q. quit")
 
         choice = input("Select an option (1 , 2, q): ").strip()
 
         if choice == '1':
-            add_lecturer()
+            first_name = input("Enter First Name: ")
+            last_name = input("Enter Last Name: ")
+            phone_number = input("Enter Phone Number: ")
+            add_lecturer(first_name, last_name, phone_number)
         elif choice == '2':
-            lecturer_lookup()
+            search_name = input("Who are you trying to find? ")
+            lecturer_lookup(search_name)
         elif choice == 'q':
             print("Goodbye")
             break
