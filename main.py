@@ -1,11 +1,14 @@
-## NOTES
-# Delete the database to start a fresh 
+## NOTES 
 # In the event where someone writes a wrong first name after 
 # pressing enter , they may not go back leading to erranous database
 import sqlite3
 
 def get_db():
-    connection = sqlite3.connect('lecturer.db')
+    #uncomment this line
+    #database = 'sherlock.db'
+    #comment this line out 
+    database = 'lecturer.db'
+    connection = sqlite3.connect(database)
     return connection, connection.cursor()
 
 def create_table():
