@@ -116,9 +116,9 @@ def main():
         choice = input("Select an option (1 , 2, q): ").strip()
 
         if choice == '1':
-            first_name = input("Enter First Name: ")
-            last_name = input("Enter Last Name: ")
-            phone_number = input("Enter Phone Number: ")
+            first_name = input("Enter First Name: ").strip().lower()
+            last_name = input("Enter Last Name: ").strip().lower()
+            phone_number = input("Enter Phone Number: ").strip()
 
             option = input(f"Are you sure you want to add {first_name.capitalize()} {last_name.capitalize()} with phone {phone_number} (y/n)?").strip()
             if option == 'y':
@@ -128,7 +128,7 @@ def main():
             else:
                print("Invalid choice. Enter either y or n")
         elif choice == '2':
-            search_name = input("Who are you trying to find? ")
+            search_name = input("Who are you trying to find? ").strip().lower()
             lecturer_lookup(search_name)
         elif choice == 'q':
             print("Goodbye")
