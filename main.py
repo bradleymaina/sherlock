@@ -92,14 +92,11 @@ def lecturer_lookup(search_name):
         lecturer_list = []
 
         for row in results:
-            lecturer_list.append
-            (
-                {
+            lecturer_list.append({
                 "first_name": row[1],
                 "last_name": row[2],
                 "phone_number": row[3]
-                }
-            )
+            })
         return {
             "status": "success",
             "count": len(lecturer_list),
