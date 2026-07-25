@@ -1,6 +1,4 @@
 ## NOTES 
-# In the event where someone writes a wrong first name after 
-# pressing enter , they may not go back leading to erranous database
 #add sql  functionality that allows indexing
 import sqlite3
 
