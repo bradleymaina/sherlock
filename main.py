@@ -26,6 +26,12 @@ def create_table():
     connection.close()
 
 def add_lecturer(first_name, last_name, phone_number):
+
+    first_name = first_name.strip().lower()
+    last_name = last_name.strip().lower()
+    phone_number = phone_number.strip()
+
+    #validate name later
     
     if len(phone_number) != 10 or not phone_number.isdigit():
         return{
@@ -67,6 +73,8 @@ def add_lecturer(first_name, last_name, phone_number):
         connection.close()
 
 def lecturer_lookup(search_name):
+    search_name = search_name.strip().lower()
+
     query_param = f"%{search_name}%"
 
     connection, cursor = get_db()
@@ -116,20 +124,35 @@ def main():
         choice = input("Select an option (1 , 2, q): ").strip()
 
         if choice == '1':
-            first_name = input("Enter First Name: ").strip().lower()
-            last_name = input("Enter Last Name: ").strip().lower()
-            phone_number = input("Enter Phone Number: ").strip()
+            first_name = input("Enter First Name: ")
+            last_name = input("Enter Last Name: ")
+            phone_number = input("Enter Phone Number: ")
 
             option = input(f"Are you sure you want to add {first_name.capitalize()} {last_name.capitalize()} with phone {phone_number} (y/n)?").strip()
             if option == 'y':
-                add_lecturer(first_name, last_name, phone_number)
+                result = add_lecturer(first_name, last_name, phone_number)
+
+                if result["status"] == "success":
+                    print(result["status"])
+                    print(result["data"])
+                else:
+                    print(result["message"])
             elif option == 'n':
                 print("Addition cancelled!")
             else:
                print("Invalid choice. Enter either y or n")
         elif choice == '2':
-            search_name = input("Who are you trying to find? ").strip().lower()
-            lecturer_lookup(search_name)
+            search_name = input("Who are you trying to find? ") 
+
+            result = lecturer_lookup(search_name)
+
+            if result["status"] == "success":
+                print(result["status"])
+                print(result["data"])
+
+            else:
+                print(result["message"])
+
         elif choice == 'q':
             print("Goodbye")
             break
