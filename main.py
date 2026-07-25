@@ -92,11 +92,11 @@ def lecturer_lookup(search_name):
                 "phone_number": row[3]
                 }
             )
-            return {
-                "status": "success",
-                "count": len(lecturer_list),
-                "data": lecturer_list
-            }
+        return {
+            "status": "success",
+            "count": len(lecturer_list),
+            "data": lecturer_list
+        }
             
     else:
         return {
