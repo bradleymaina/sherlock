@@ -27,8 +27,8 @@ def create_table():
 
 def add_lecturer(first_name, last_name, phone_number):
 
-    first_name = first_name.strip().lower()
-    last_name = last_name.strip().lower()
+    first_name = first_name.strip().title()
+    last_name = last_name.strip().title()
     phone_number = phone_number.strip()
 
     #validate name later
