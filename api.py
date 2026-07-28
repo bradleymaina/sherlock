@@ -1,10 +1,12 @@
-from fastapi import FastAPI  
+from fastapi import FastAPI , Request
+from fastapi.responses import PlainTextResponse 
 from pydantic import BaseModel, Field
 
 from main import add_lecturer , lecturer_lookup
 
 app = FastAPI()
 
+META_VERIFY_TOKEN = "sherlock_webhook_2026"
 
 class Lecturer(BaseModel):
     first_name: str = Field(
@@ -35,3 +37,26 @@ def get_lecturer(search_name:str ):
         search_name
     )
     return result
+
+@app.get("/webhook")
+def verify_webhook(request: Request):
+
+    mode = request.query_params.get("hub.mode")
+    token = request.query_params.get("hub.verify_token")
+    challenge = request.query_params.get("hub.challenge")
+
+    if mode == "subscribe"  and token == META_VERIFY_TOKEN:
+        return PlainTextResponse(challenge)
+    return PlainTextResponse(
+        "Verification failed",
+        status_code=403
+    ) 
+
+@app.post("/webhook")
+async def receive_webhook(request: Request):
+
+    data = await request.json()
+
+    print(data)
+
+    return {"status": "received"}
