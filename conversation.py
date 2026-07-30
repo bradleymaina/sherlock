@@ -23,6 +23,10 @@ def process_message(phone, msg):
     if state is None:
         set_state(phone, START)
         state = START
+
+    elif state == START:
+        set_state(phone, MENU)
+        
     elif state == MENU:
 
         if msg == "add_lecturer":
