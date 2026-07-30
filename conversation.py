@@ -40,7 +40,8 @@ def process_message(wa_id, msg):
             
         elif msg == "search_lecturer":
             set_state(wa_id, WAITING_FOR_LECTURER_NAME)
-            sessions[wa_id]["lecturer_name"] = msg
+    elif state == WAITING_FOR_LECTURER_NAME:
+        sessions[wa_id]["lecturer_name"] = msg
 
     elif state == WAITING_FOR_FIRST_NAME:
         set_state(wa_id, WAITING_FOR_LAST_NAME)
