@@ -1,3 +1,5 @@
+from database import add_lecturer, lecturer_lookup
+
 MENU = "MENU"
 
 #Add Lecturer
@@ -40,8 +42,10 @@ def process_message(wa_id, msg):
             
         elif msg == "search_lecturer":
             set_state(wa_id, WAITING_FOR_LECTURER_NAME)
+
     elif state == WAITING_FOR_LECTURER_NAME:
         sessions[wa_id]["lecturer_name"] = msg
+        lecturer_lookup(sessions[wa_id]["lecturer_name"])
 
     elif state == WAITING_FOR_FIRST_NAME:
         set_state(wa_id, WAITING_FOR_LAST_NAME)
@@ -54,3 +58,6 @@ def process_message(wa_id, msg):
     elif state == WAITING_FOR_PHONE_NUMBER:
         set_state(wa_id, MENU)
         sessions[wa_id]["phone_number"] = msg
+
+        add_lecturer(sessions[wa_id]["first_name"], sessions[wa_id]["last_name"], sessions[wa_id]["phone_number"])
+    
