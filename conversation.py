@@ -19,7 +19,12 @@ def set_state(wa_id, state):
         sessions[wa_id]["state"] = state
 
 def get_state(wa_id):
-    return sessions.get(wa_id)
+    session = sessions.get(wa_id)
+
+    if session is None:
+        return None
+
+    return session["state"]
 
 def process_message(wa_id, msg):
     state = get_state(wa_id)
