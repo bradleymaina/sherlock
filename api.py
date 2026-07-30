@@ -2,7 +2,7 @@ from fastapi import FastAPI , Request
 from fastapi.responses import PlainTextResponse 
 from pydantic import BaseModel, Field
 
-from main import add_lecturer , lecturer_lookup
+from database import add_lecturer , lecturer_lookup
 
 app = FastAPI()
 
