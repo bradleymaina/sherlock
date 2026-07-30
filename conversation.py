@@ -9,34 +9,39 @@ WAITING_FOR_PHONE_NUMBER = "WAITING_FOR_PHONE_NUMBER"
 #Search for Lecturer
 WAITING_FOR_LECTURER_NAME = "WAITING_FOR_LECTURER_NAME"
 
-states = {}
+sessions = {}
 
-def set_state(phone, state):
-    states[phone] = state
+def set_state(wa_id, state):
+    sessions[wa_id]["state"] = state
 
-def get_state(phone):
-    return states.get(phone)
+def get_state(wa_id):
+    return sessions.get(wa_id)
 
-def process_message(phone, msg):
-    state = get_state(phone)
+def process_message(wa_id, msg):
+    state = get_state(wa_id)
 
     if state is None:
-        set_state(phone, MENU)
+        set_state(wa_id, MENU)
         state = START
-
+   
     elif state == MENU:
 
         if msg == "add_lecturer":
-            set_state(phone, WAITING_FOR_FIRST_NAME) 
-
+            set_state(wa_id, WAITING_FOR_FIRST_NAME) 
+            
+            
         elif msg == "search_lecturer":
-            set_state(phone, WAITING_FOR_SEARCH_NAME)
+            set_state(wa_id, WAITING_FOR_LECTURER_NAME)
+            sessions[wa_id]["lecturer_name"] = msg
 
     elif state == WAITING_FOR_FIRST_NAME:
-        set_state(phone, WAITING_FOR_LAST_NAME)
+        set_state(wa_id, WAITING_FOR_LAST_NAME)
+        sessions[wa_id]["first_name"] = msg
 
     elif state == WAITING_FOR_LAST_NAME:
-        set_state(phone, WAITING_FOR_PHONE_NUMBER)
+        set_state(wa_id, WAITING_FOR_PHONE_NUMBER)
+        sessions[wa_id]["last_name"] = msg
 
     elif state == WAITING_FOR_PHONE_NUMBER:
-        set_state(phone, MENU)
+        set_state(wa_id, MENU)
+        sessions[wa_id]["phone_number"] = msg
