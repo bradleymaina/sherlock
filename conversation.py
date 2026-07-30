@@ -1,4 +1,3 @@
-START = "START"
 MENU = "MENU"
 
 #Add Lecturer
@@ -12,7 +11,12 @@ WAITING_FOR_LECTURER_NAME = "WAITING_FOR_LECTURER_NAME"
 sessions = {}
 
 def set_state(wa_id, state):
-    sessions[wa_id]["state"] = state
+    if wa_id not in sessions:
+        sessions[wa_id] = {
+            "state": state
+        }
+    else:
+        sessions[wa_id]["state"] = state
 
 def get_state(wa_id):
     return sessions.get(wa_id)
@@ -22,7 +26,6 @@ def process_message(wa_id, msg):
 
     if state is None:
         set_state(wa_id, MENU)
-        state = START
    
     elif state == MENU:
 
