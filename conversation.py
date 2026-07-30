@@ -57,7 +57,6 @@ def process_message(wa_id, msg):
         sessions[wa_id]["last_name"] = msg
 
     elif state == WAITING_FOR_PHONE_NUMBER:
-        set_state(wa_id, MENU)
         sessions[wa_id]["phone_number"] = msg
 
         add_lecturer(sessions[wa_id]["first_name"], sessions[wa_id]["last_name"], sessions[wa_id]["phone_number"])
