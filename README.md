@@ -23,6 +23,43 @@ All forms of contribution are welcomed: both ideological and code . If the contr
     2. Write intentional Pull Requests . Your PR should clearly highlight what you are trying to change , why you are trying to change and how it improves the overall functionaluty of the system. It should be in the form :
        change  x improves y by doing z.
 
+To contribute to sherlock: 
+
+You need to fork the repo. 
+
+1. You need to have python installed : any version above python2+
+
+On Arch: 
+
+`sudo pacman -S python3`
+
+On Debian based distros , you can use `apt` and on fedora `dnf`
+
+On Windows , just chatgpt how to install python on there. Windows sucks.
+
+2. Once python is installed , you need to install pip 
+
+On Arch:
+
+`sudo pacman -S python-pip`
+
+I think on debian based distros , `apt` should work and `dnf` on fedora . This is theoretical though , i have not tried installing pip on fedora or ubuntu before but i have used them.
+So just try , if it breaks , look it up
+On Windows , i have no clue in the world . Maybe pip is an executable on there . ha ha . 
+
+3. Set up a virtual environment:
+
+`python3 -m venv sherlock`
+
+54. Activate the environment:
+
+`source sherlcok/bin/activate`
+
+. Install dependancies:
+
+`pip install fastapi, pydantic`
+
+After all is done, you can  experiment , find bugs , think of improvements ...ship ....if it is sane enough , i will merge and yes i stole that from Linus Torvalds. Sue me.
 All contribution is welcomed.
 
 ## Project structure
