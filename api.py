@@ -57,7 +57,11 @@ def verify_webhook(request: Request):
 async def receive_webhook(request: Request):
 
     data = await request.json()
-
     print(data)
+
+    wa_id =  data["entry"][0]["changes"][0]["value"]["messages"][0]["from"]
+    msg = data["entry"][0]["changes"][0]["value"]["messages"][0]["text"]["body"]
+
+    process_message(wa_id, msg)
 
     return {"status": "received"}
