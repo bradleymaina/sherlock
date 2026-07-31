@@ -33,6 +33,7 @@ def process_message(wa_id, msg):
 
     if state is None:
         set_state(wa_id, MENU)
+        state = MENU
    
     elif state == MENU:
 
