@@ -3,6 +3,7 @@ from fastapi.responses import PlainTextResponse
 from pydantic import BaseModel, Field
 
 from database import add_lecturer , lecturer_lookup
+from conversation import process_message
 
 app = FastAPI()
 
