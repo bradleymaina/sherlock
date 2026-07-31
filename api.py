@@ -59,8 +59,17 @@ async def receive_webhook(request: Request):
     data = await request.json()
     print(data)
 
-    wa_id =  data["entry"][0]["changes"][0]["value"]["messages"][0]["from"]
-    msg = data["entry"][0]["changes"][0]["value"]["messages"][0]["text"]["body"]
+    type = data["entry"][0]["changes"][0]["value"]["messages"][0]["type"]
+
+    if type == "text":
+        wa_id =  data["entry"][0]["changes"][0]["value"]["messages"][0]["from"]
+        msg = data["entry"][0]["changes"][0]["value"]["messages"][0]["text"]["body"]
+    else:
+        exit()
+        return {
+            "status": "error",
+            "message": "Must be of type text "
+        }
 
     process_message(wa_id, msg)
 
