@@ -45,8 +45,13 @@ def process_message(wa_id, msg):
 
     elif state == WAITING_FOR_LECTURER_NAME:
         sessions[wa_id]["lecturer_name"] = msg
-        lecturer_lookup(sessions[wa_id]["lecturer_name"])
-        del sessions[wa_id]
+
+        result = lecturer_lookup(sessions[wa_id]["lecturer_name"])
+
+        if result["status"] == "success":
+             del sessions[wa_id]
+
+        return result["message"]
 
     elif state == WAITING_FOR_FIRST_NAME:
         set_state(wa_id, WAITING_FOR_LAST_NAME)
@@ -59,6 +64,10 @@ def process_message(wa_id, msg):
     elif state == WAITING_FOR_PHONE_NUMBER:
         sessions[wa_id]["phone_number"] = msg
 
-        add_lecturer(sessions[wa_id]["first_name"], sessions[wa_id]["last_name"], sessions[wa_id]["phone_number"])
-        del sessions[wa_id]
-    
+        result = add_lecturer(sessions[wa_id]["first_name"], sessions[wa_id]["last_name"], sessions[wa_id]["phone_number"])
+
+        if result["status"] == "success":
+            del sessions[wa_id]
+
+        return result["message"]
+        
