@@ -43,8 +43,8 @@ On Arch:
 
 `sudo pacman -S python-pip`
 
-I think on debian based distros , `apt` should work and `dnf` on fedora . This is theoretical though , i have not tried installing pip on fedora or ubuntu before but i have used them.
-So just try , if it breaks , look it up
+On debian based distros `apt` should work and on rpm based distros `dnf` should work. 
+Despite using Ubuntu and Fedora at some point in my life , i have never installed  pip or python on there. If i have , i do not remember. I think python comes pre installed though. So if the package managers do not work , justlook it up. 
 On Windows , i have no clue in the world . Maybe pip is an executable on there . ha ha . 
 
 3. Set up a virtual environment:
@@ -64,9 +64,6 @@ All contribution is welcomed.
 
 ## Project structure
 Currently       
-
-## Project structure
-Currently
 
 ```
 sherlock/
