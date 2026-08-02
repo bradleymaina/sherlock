@@ -26,7 +26,6 @@ class Lecturer(BaseModel):
 
 #payload
 class TextMessage(BaseModel):
-    object: Optional[str]
     body: str
 
 class Message(BaseModel):
@@ -45,6 +44,7 @@ class Entry(BaseModel):
     changes: list[Change]
 
 class WebhookPayload(BaseModel):
+    object: Optional[str]
     entry: list[Entry]
 
 
