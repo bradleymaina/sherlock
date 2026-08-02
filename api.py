@@ -1,6 +1,7 @@
 from fastapi import FastAPI , Request
 from fastapi.responses import PlainTextResponse 
 from pydantic import BaseModel, Field
+from typing import List, Optional
 
 from database import add_lecturer , lecturer_lookup
 from conversation import process_message
@@ -22,6 +23,28 @@ class Lecturer(BaseModel):
          min_length = 10,
         max_length = 10,
         pattern= r"^(07|01)\d{8}$")
+
+#payload
+class WebhookPayload(BaseModel):
+    entry: list
+
+class Entry(BaseModel):
+    changes: list
+
+class Change(BaseModel):
+    value: Value
+
+class Value(BaseModel):
+    messages: Optional[List[Message]] = None
+
+class Message(BaseModel):
+    from_number: str
+    type: str
+    text: Optional[TextMessage] 
+
+class TextMessage(BaseModel):
+    body: str
+
 
 @app.post("/lecturers")
 def create_lecturer(lecturer: Lecturer):
@@ -65,7 +88,6 @@ async def receive_webhook(request: Request):
         wa_id =  data["entry"][0]["changes"][0]["value"]["messages"][0]["from"]
         msg = data["entry"][0]["changes"][0]["value"]["messages"][0]["text"]["body"]
     else:
-        exit()
         return {
             "status": "error",
             "message": "Must be of type text "
