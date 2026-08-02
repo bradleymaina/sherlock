@@ -79,12 +79,29 @@ def verify_webhook(request: Request):
     ) 
 
 @app.post("/webhook")
-async def receive_webhook(request: Request):
+async def receive_webhook(payload: WebhookPayload):
 
-    data = await request.json()
-    print(data)
+    #validate entries and changes
+    if not payload.entry or not payload.entry[0].changes:
+        return{"status": "ignored"}
 
-   
-    process_message(wa_id, msg)
+    value = payload.entry[0].changes[0].value
 
-    return {"status": "received"}
+    #when there is no message in the payload
+    if not value.messages:
+        return {"status": "ignored"}
+
+    #incoming messages
+    message = value.messages[0]
+
+    if message.type == "text" and message.text:
+        wa_id = message.from_number
+        msg = message.text.body
+
+        reply_text_message =process_message(wa_id, msg)
+        print(f"Replying to {wa_id} with message: {reply_text_message}")
+
+        #TODO: call outbound send_whatsapp_message(wa_id, reply_text_message) here!
+        return {"status": "success"}
+
+    return {"status": "ignored", "reason": "non-text message"}
