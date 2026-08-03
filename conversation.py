@@ -38,13 +38,14 @@ def process_message(wa_id, msg):
     if state == MENU:
         if msg == "hello":
             return "Welcome to sherlock.I am a virtual assistant that makes it easy to find lecturers and add them to the database."
+        
         if msg == "add_lecturer":
-            
             set_state(wa_id, WAITING_FOR_FIRST_NAME) 
-            
+            return "Please enter the lecturer's first name."
             
         elif msg == "search_lecturer":
             set_state(wa_id, WAITING_FOR_LECTURER_NAME)
+            return "Please enter the lecturer's name you want to search for."
 
     elif state == WAITING_FOR_LECTURER_NAME:
         sessions[wa_id]["lecturer_name"] = msg
@@ -59,10 +60,12 @@ def process_message(wa_id, msg):
     elif state == WAITING_FOR_FIRST_NAME:
         set_state(wa_id, WAITING_FOR_LAST_NAME)
         sessions[wa_id]["first_name"] = msg
+        return "Please enter the lecturer's last name."
 
     elif state == WAITING_FOR_LAST_NAME:
         set_state(wa_id, WAITING_FOR_PHONE_NUMBER)
         sessions[wa_id]["last_name"] = msg
+        return "Please enter the lecturer's phone number."
 
     elif state == WAITING_FOR_PHONE_NUMBER:
         sessions[wa_id]["phone_number"] = msg
