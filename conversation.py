@@ -35,7 +35,7 @@ def process_message(wa_id, msg):
         set_state(wa_id, MENU)
         state = MENU
    
-    elif state == MENU:
+    if state == MENU:
 
         if msg == "add_lecturer":
             set_state(wa_id, WAITING_FOR_FIRST_NAME) 
