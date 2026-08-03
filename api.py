@@ -1,5 +1,5 @@
-from dotenv import load_dotenv
 import os
+from dotenv import load_dotenv
 from fastapi import FastAPI , Request
 from fastapi.responses import PlainTextResponse 
 from pydantic import BaseModel, Field
@@ -9,6 +9,11 @@ from database import add_lecturer , lecturer_lookup
 from conversation import process_message
 
 app = FastAPI()
+load_dotenv()
+
+
+PHONE_NUMBER_ID = os.getenv("WHATSAPP_PHONE_NUMBER_ID")
+ACCESS_TOKEN = os.getenv("WHATSAPP_ACCESS_TOKEN")
 
 META_VERIFY_TOKEN = "sherlock_webhook_2026"
 
