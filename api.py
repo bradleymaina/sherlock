@@ -86,7 +86,29 @@ def verify_webhook(request: Request):
     ) 
 
 def send_whatsapp_message(wa_id, message):
+    url = f"https://graph.facebook.com/v26.0/{PHONE_NUMBER_ID}/messages"
+    headers = {
+        "Authorization": f"Bearer{ACCESS_TOKEN}",
+        "Content-Type": "application/json"
+    }
 
+    payload = {
+        "messaging_product": "whatsapp", 
+        "to": wa_id,
+        "type": "text",
+        "text": {
+            "body": message
+        }
+    }
+
+    response  = requests.post(
+        url,
+        headers=headers,
+        json= payload 
+    )
+
+
+    
 
 @app.post("/webhook")
 async def receive_webhook(payload: WebhookPayload):
