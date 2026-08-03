@@ -36,8 +36,10 @@ def process_message(wa_id, msg):
         state = MENU
    
     if state == MENU:
-
+        if msg == "hello":
+            return "Welcome to sherlock.I am a virtual assistant that makes it easy to find lecturers and add them to the database."
         if msg == "add_lecturer":
+            
             set_state(wa_id, WAITING_FOR_FIRST_NAME) 
             
             
