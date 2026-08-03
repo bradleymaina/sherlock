@@ -75,5 +75,5 @@ def process_message(wa_id, msg):
         if result["status"] == "success":
             del sessions[wa_id]
 
-        return result["message"]
+        return result["data"]
         
