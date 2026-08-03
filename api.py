@@ -1,5 +1,3 @@
-import requests
-
 from fastapi import FastAPI , Request
 from fastapi.responses import PlainTextResponse 
 from pydantic import BaseModel, Field
@@ -10,6 +8,7 @@ from conversation import process_message
 
 app = FastAPI()
 
+META_VERIFY_TOKEN = "sherlock_webhook_2026"
 
 class Lecturer(BaseModel):
     first_name: str = Field(
@@ -78,13 +77,6 @@ def verify_webhook(request: Request):
         "Verification failed",
         status_code=403
     ) 
-
-def send_whatsapp_message(wa_id, message):
-
-
-
-
-
 
 @app.post("/webhook")
 async def receive_webhook(payload: WebhookPayload):
