@@ -1,3 +1,5 @@
+from dotenv import load_dotenv
+import os
 from fastapi import FastAPI , Request
 from fastapi.responses import PlainTextResponse 
 from pydantic import BaseModel, Field
@@ -77,6 +79,9 @@ def verify_webhook(request: Request):
         "Verification failed",
         status_code=403
     ) 
+
+def send_whatsapp_message(wa_id, message):
+
 
 @app.post("/webhook")
 async def receive_webhook(payload: WebhookPayload):
