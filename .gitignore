@@ -3,3 +3,4 @@ node_modules/
 .wwebjs_cache/
 __pycache__/
 *.pyc
+.env
