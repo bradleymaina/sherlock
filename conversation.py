@@ -76,4 +76,6 @@ def process_message(wa_id, msg):
             del sessions[wa_id]
 
         return result["data"]
-        
+
+        #TODO: Return a success message when lecturer is added
+        #TODO: Fix the search lecturer function.
