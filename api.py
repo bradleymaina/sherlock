@@ -108,7 +108,7 @@ def send_whatsapp_message(wa_id, message):
         json= payload 
     )
 
-
+    return response
     
 
 @app.post("/webhook")
