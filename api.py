@@ -134,7 +134,8 @@ async def receive_webhook(payload: WebhookPayload):
         reply_text_message =process_message(wa_id, msg)
         print(f"Replying to {wa_id} with message: {reply_text_message}")
 
-        #TODO: call outbound send_whatsapp_message(wa_id, reply_text_message) here!
+        send_whatsapp_message(wa_id, reply_text_message)
+        
         return {"status": "success"}
 
     return {"status": "ignored", "reason": "non-text message"}
