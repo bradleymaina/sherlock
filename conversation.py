@@ -79,3 +79,4 @@ def process_message(wa_id, msg):
 
         #TODO: Return a success message when lecturer is added
         #TODO: Fix the search lecturer function.
+        #TODO: Add confirmation loop
