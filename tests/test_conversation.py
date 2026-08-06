@@ -135,10 +135,11 @@ def test_search_lecturer_accepts_search_term():
 def test_unknown_command_does_not_crash():
     wa_id = "0712345678"
 
-    process_message(wa_id, "this_is_not_a_command")
+    response = process_message(wa_id, "this_is_not_a_command")
 
+    assert response == "Invalid option!"
 
-# ---------------------------------------------------------
+# -------------------------------------------------------
 # Session isolation
 # ---------------------------------------------------------
 
