@@ -73,10 +73,19 @@ def process_message(wa_id, msg):
         result = add_lecturer(sessions[wa_id]["first_name"], sessions[wa_id]["last_name"], sessions[wa_id]["phone_number"])
 
         if result["status"] == "success":
+            first_name = sessions[wa_id]["first_name"]
+            last_name = sessions[wa_id]["last_name"]    
+            phone_number = sessions[wa_id]["phone_number"]
+
             del sessions[wa_id]
+
+            return(
+                f"Lecturer {first_name} {last_name} "
+                f"with phone number {phone_number} has been added successfully."
+            )
 
         return result["data"]
 
-        #TODO: Return a success message when lecturer is added
+       
         #TODO: Fix the search lecturer function.
         #TODO: Add confirmation loop
