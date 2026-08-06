@@ -1,6 +1,6 @@
 import pytest
 
-from src.conversation import process_message
+from sherlock.conversation import process_message
 
 
 def test_process_message():
