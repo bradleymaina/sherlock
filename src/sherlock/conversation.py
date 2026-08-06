@@ -46,6 +46,8 @@ def process_message(wa_id, msg):
         elif msg == "search_lecturer":
             set_state(wa_id, WAITING_FOR_LECTURER_NAME)
             return "Please enter the lecturer's name you want to search for."
+        else:
+            return "Invalid option!"
 
     elif state == WAITING_FOR_LECTURER_NAME:
         sessions[wa_id]["lecturer_name"] = msg
