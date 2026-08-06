@@ -1,3 +1,5 @@
+from unittest.mock import patch
+
 import pytest
 
 from sherlock.conversation import (
@@ -14,9 +16,7 @@ from sherlock.conversation import (
 
 @pytest.fixture(autouse=True)
 def clear_sessions():
-    """
-    Give every test a clean conversation state.
-    """
+    """Give every test a clean conversation state."""
     sessions.clear()
     yield
     sessions.clear()
@@ -74,14 +74,26 @@ def test_last_name_moves_to_phone_number():
 def test_phone_number_completes_add_lecturer_flow():
     wa_id = "0712345678"
 
-    process_message(wa_id, "add_lecturer")
-    process_message(wa_id, "Bradley")
-    process_message(wa_id, "Maina")
+    with patch("sherlock.conversation.add_lecturer") as mock_add:
+        mock_add.return_value = {
+            "status": "success",
+            "data": "Lecturer added successfully.",
+        }
 
-    response = process_message(wa_id, "0712345678")
+        process_message(wa_id, "add_lecturer")
+        process_message(wa_id, "Bradley")
+        process_message(wa_id, "Maina")
 
-    assert response is not None
-    assert get_state(wa_id) == MENU
+        response = process_message(wa_id, "0712345678")
+
+        mock_add.assert_called_once_with(
+            "Bradley",
+            "Maina",
+            "0712345678",
+        )
+
+        assert response == "Lecturer added successfully."
+        assert get_state(wa_id) is None
 
 
 # ---------------------------------------------------------
@@ -93,18 +105,27 @@ def test_search_lecturer_starts_flow():
 
     response = process_message(wa_id, "search_lecturer")
 
-    assert response is not None
+    assert response == "Please enter the lecturer's name you want to search for."
     assert get_state(wa_id) == WAITING_FOR_LECTURER_NAME
 
 
 def test_search_lecturer_accepts_search_term():
     wa_id = "0712345678"
 
-    process_message(wa_id, "search_lecturer")
+    with patch("sherlock.conversation.lecturer_lookup") as mock_lookup:
+        mock_lookup.return_value = {
+            "status": "success",
+            "message": "Lecturer found.",
+        }
 
-    response = process_message(wa_id, "Bradley")
+        process_message(wa_id, "search_lecturer")
 
-    assert response is not None
+        response = process_message(wa_id, "Bradley")
+
+        mock_lookup.assert_called_once_with("Bradley")
+
+        assert response == "Lecturer found."
+        assert get_state(wa_id) is None
 
 
 # ---------------------------------------------------------
@@ -114,9 +135,7 @@ def test_search_lecturer_accepts_search_term():
 def test_unknown_command_does_not_crash():
     wa_id = "0712345678"
 
-    response = process_message(wa_id, "this_is_not_a_command")
-
-    assert response is not None
+    process_message(wa_id, "this_is_not_a_command")
 
 
 # ---------------------------------------------------------
@@ -134,9 +153,8 @@ def test_users_have_independent_sessions():
     assert get_state(user_b) == WAITING_FOR_LECTURER_NAME
 
 
-
 # ---------------------------------------------------------
-# Repeated users / existing session
+# Existing session
 # ---------------------------------------------------------
 
 def test_existing_session_continues_from_current_state():
