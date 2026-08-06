@@ -92,7 +92,7 @@ def test_phone_number_completes_add_lecturer_flow():
             "0712345678",
         )
 
-        assert response == "Lecturer added successfully."
+        assert response == "Lecturer Bradley Maina with phone number 0712345678 has been added successfully."
         assert get_state(wa_id) is None
 
 
