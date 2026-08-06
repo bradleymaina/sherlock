@@ -1,4 +1,4 @@
-from database import create_table, add_lecturer, lecturer_lookup
+from .database import create_table, add_lecturer, lecturer_lookup
 
 def main():
     create_table()
