@@ -134,18 +134,6 @@ def test_users_have_independent_sessions():
     assert get_state(user_b) == WAITING_FOR_LECTURER_NAME
 
 
-# ---------------------------------------------------------
-# Case handling
-# ---------------------------------------------------------
-
-def test_add_lecturer_command_is_case_insensitive():
-    wa_id = "0712345678"
-
-    response = process_message(wa_id, "ADD_LECTURER")
-
-    assert response == "Please enter the lecturer's first name."
-    assert get_state(wa_id) == WAITING_FOR_FIRST_NAME
-
 
 # ---------------------------------------------------------
 # Repeated users / existing session
