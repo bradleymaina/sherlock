@@ -1,4 +1,4 @@
-from database import add_lecturer, lecturer_lookup
+from .database import add_lecturer, lecturer_lookup
 
 MENU = "MENU"
 
