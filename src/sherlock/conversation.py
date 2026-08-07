@@ -65,6 +65,9 @@ def process_message(wa_id, msg):
             del sessions[wa_id]
             return response.strip()
 
+        elif result["status"] == "error":
+            return result["message"]
+
     elif state == WAITING_FOR_FIRST_NAME:
         set_state(wa_id, WAITING_FOR_LAST_NAME)
         sessions[wa_id]["first_name"] = msg
