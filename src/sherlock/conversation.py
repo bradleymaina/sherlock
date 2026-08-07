@@ -60,7 +60,7 @@ def process_message(wa_id, msg):
                 first_name = lecturer["first_name"]
                 last_name = lecturer["last_name"]
                 phone_number = lecturer["phone_number"]
-                response += f"Found lecturer: {first_name} {last_name} with phone number {phone_number}.\n"
+                response += f" {first_name} {last_name} : {phone_number}.\n"
             return response.strip()
 
     elif state == WAITING_FOR_FIRST_NAME:
