@@ -90,7 +90,7 @@ def process_message(wa_id, msg):
                 f"with phone number {phone_number} has been added successfully."
             )
 
-        return result["data"]
+        
 
        
         #TODO: Fix the search lecturer function.
