@@ -61,6 +61,8 @@ def process_message(wa_id, msg):
                 last_name = lecturer["last_name"]
                 phone_number = lecturer["phone_number"]
                 response += f" {first_name} {last_name} : {phone_number}.\n"
+
+            del sessions[wa_id]
             return response.strip()
 
     elif state == WAITING_FOR_FIRST_NAME:
