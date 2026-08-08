@@ -1,8 +1,8 @@
-
 import pytest
 from fastapi.testclient import TestClient
 
 from sherlock import api as main
+from sherlock.api import WebhookPayload
 
 
 @pytest.fixture
@@ -62,6 +62,7 @@ def test_create_lecturer_first_name_too_short(client):
         "last_name": "Doe",
         "phone_number": "0712345678",
     })
+
     assert response.status_code == 422
 
 
@@ -71,6 +72,7 @@ def test_create_lecturer_first_name_too_long(client):
         "last_name": "Doe",
         "phone_number": "0712345678",
     })
+
     assert response.status_code == 422
 
 
@@ -80,6 +82,7 @@ def test_create_lecturer_first_name_with_digits_rejected(client):
         "last_name": "Doe",
         "phone_number": "0712345678",
     })
+
     assert response.status_code == 422
 
 
@@ -90,6 +93,7 @@ def test_create_lecturer_phone_wrong_prefix_rejected(client):
         "last_name": "Doe",
         "phone_number": "0512345678",
     })
+
     assert response.status_code == 422
 
 
@@ -99,6 +103,7 @@ def test_create_lecturer_phone_wrong_length_rejected(client):
         "last_name": "Doe",
         "phone_number": "071234567",  # 9 digits
     })
+
     assert response.status_code == 422
 
 
@@ -108,6 +113,7 @@ def test_create_lecturer_phone_non_numeric_rejected(client):
         "last_name": "Doe",
         "phone_number": "07abcd5678",
     })
+
     assert response.status_code == 422
 
 
@@ -117,6 +123,7 @@ def test_create_lecturer_missing_field_rejected(client):
         "last_name": "Doe",
         # phone_number missing
     })
+
     assert response.status_code == 422
 
 
@@ -128,11 +135,18 @@ def test_search_lecturer_success(client, monkeypatch):
         lambda search_name: {
             "status": "success",
             "count": 1,
-            "data": [{"first_name": "John", "last_name": "Doe", "phone_number": "0712345678"}],
+            "data": [{
+                "first_name": "John",
+                "last_name": "Doe",
+                "phone_number": "0712345678"
+            }],
         },
     )
 
-    response = client.get("/lecturers/search", params={"search_name": "john"})
+    response = client.get(
+        "/lecturers/search",
+        params={"search_name": "john"}
+    )
 
     assert response.status_code == 200
     body = response.json()
@@ -143,10 +157,16 @@ def test_search_lecturer_success(client, monkeypatch):
 def test_search_lecturer_not_found(client, monkeypatch):
     monkeypatch.setattr(
         main, "lecturer_lookup",
-        lambda search_name: {"status": "error", "message": "not found"},
+        lambda search_name: {
+            "status": "error",
+            "message": "not found"
+        },
     )
 
-    response = client.get("/lecturers/search", params={"search_name": "nobody"})
+    response = client.get(
+        "/lecturers/search",
+        params={"search_name": "nobody"}
+    )
 
     assert response.status_code == 200
     assert response.json()["status"] == "error"
@@ -154,6 +174,7 @@ def test_search_lecturer_not_found(client, monkeypatch):
 
 def test_search_lecturer_missing_query_param(client):
     response = client.get("/lecturers/search")
+
     assert response.status_code == 422
 
 
@@ -192,6 +213,7 @@ def test_verify_webhook_wrong_mode(client):
 
 def test_verify_webhook_missing_params(client):
     response = client.get("/webhook")
+
     assert response.status_code == 403
 
 
@@ -214,8 +236,88 @@ def _text_webhook_payload(wa_id="254712345678", body="hi"):
     }
 
 
+# ---------- NEW: interactive webhook payloads ----------
+
+def _button_webhook_payload(wa_id="254712345678"):
+    return {
+        "object": "whatsapp_business_account",
+        "entry": [{
+            "changes": [{
+                "value": {
+                    "messages": [{
+                        "from": wa_id,
+                        "type": "interactive",
+                        "interactive": {
+                            "type": "button_reply",
+                            "button_reply": {
+                                "id": "explore_sherlock",
+                                "title": "Explore Sherlock",
+                            },
+                        },
+                    }]
+                }
+            }]
+        }],
+    }
+
+
+def _list_webhook_payload(wa_id="254712345678"):
+    return {
+        "object": "whatsapp_business_account",
+        "entry": [{
+            "changes": [{
+                "value": {
+                    "messages": [{
+                        "from": wa_id,
+                        "type": "interactive",
+                        "interactive": {
+                            "type": "list_reply",
+                            "list_reply": {
+                                "id": "add_lecturer",
+                                "title": "Add Lecturer",
+                            },
+                        },
+                    }]
+                }
+            }]
+        }],
+    }
+
+
+# ---------- NEW: Pydantic interactive payload tests ----------
+
+def test_button_webhook_payload_parses():
+    payload = _button_webhook_payload()
+
+    webhook = WebhookPayload(**payload)
+
+    message = webhook.entry[0].changes[0].value.messages[0]
+
+    assert message.type == "interactive"
+    assert message.interactive.type == "button_reply"
+    assert message.interactive.button_reply.id == "explore_sherlock"
+    assert message.interactive.button_reply.title == "Explore Sherlock"
+
+
+def test_list_webhook_payload_parses():
+    payload = _list_webhook_payload()
+
+    webhook = WebhookPayload(**payload)
+
+    message = webhook.entry[0].changes[0].value.messages[0]
+
+    assert message.type == "interactive"
+    assert message.interactive.type == "list_reply"
+    assert message.interactive.list_reply.id == "add_lecturer"
+    assert message.interactive.list_reply.title == "Add Lecturer"
+
+
 def test_receive_webhook_text_message_success(client, monkeypatch):
-    monkeypatch.setattr(main, "process_message", lambda wa_id, msg: "auto-reply")
+    monkeypatch.setattr(
+        main,
+        "process_message",
+        lambda wa_id, msg: "auto-reply"
+    )
 
     sent = {}
 
@@ -225,13 +327,22 @@ def test_receive_webhook_text_message_success(client, monkeypatch):
 
         class FakeResponse:
             status_code = 200
+
         return FakeResponse()
 
-    monkeypatch.setattr(main, "send_whatsapp_message", fake_send)
+    monkeypatch.setattr(
+        main,
+        "send_whatsapp_message",
+        fake_send
+    )
 
-    response = client.post("/webhook", json=_text_webhook_payload(
-        wa_id="254712345678", body="find john"
-    ))
+    response = client.post(
+        "/webhook",
+        json=_text_webhook_payload(
+            wa_id="254712345678",
+            body="find john"
+        )
+    )
 
     assert response.status_code == 200
     assert response.json() == {"status": "success"}
@@ -272,8 +383,18 @@ def test_receive_webhook_no_messages(client):
 def test_receive_webhook_non_text_message(client, monkeypatch):
     # process_message/send_whatsapp_message should NOT be called for non-text
     called = {"process": False, "send": False}
-    monkeypatch.setattr(main, "process_message", lambda wa_id, msg: called.__setitem__("process", True))
-    monkeypatch.setattr(main, "send_whatsapp_message", lambda wa_id, msg: called.__setitem__("send", True))
+
+    monkeypatch.setattr(
+        main,
+        "process_message",
+        lambda wa_id, msg: called.__setitem__("process", True)
+    )
+
+    monkeypatch.setattr(
+        main,
+        "send_whatsapp_message",
+        lambda wa_id, msg: called.__setitem__("send", True)
+    )
 
     payload = {
         "object": "whatsapp_business_account",
@@ -311,6 +432,7 @@ def test_send_whatsapp_message_builds_correct_request(monkeypatch):
 
         class FakeResponse:
             status_code = 200
+
         return FakeResponse()
 
     monkeypatch.setattr(main.requests, "post", fake_post)
