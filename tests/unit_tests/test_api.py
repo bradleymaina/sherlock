@@ -236,8 +236,6 @@ def _text_webhook_payload(wa_id="254712345678", body="hi"):
     }
 
 
-# ---------- NEW: interactive webhook payloads ----------
-
 def _button_webhook_payload(wa_id="254712345678"):
     return {
         "object": "whatsapp_business_account",
@@ -284,7 +282,7 @@ def _list_webhook_payload(wa_id="254712345678"):
     }
 
 
-# ---------- NEW: Pydantic interactive payload tests ----------
+# ---------- Pydantic interactive payload tests ----------
 
 def test_button_webhook_payload_parses():
     payload = _button_webhook_payload()
@@ -311,6 +309,8 @@ def test_list_webhook_payload_parses():
     assert message.interactive.list_reply.id == "add_lecturer"
     assert message.interactive.list_reply.title == "Add Lecturer"
 
+
+# ---------- Webhook text message ----------
 
 def test_receive_webhook_text_message_success(client, monkeypatch):
     monkeypatch.setattr(
@@ -349,6 +349,98 @@ def test_receive_webhook_text_message_success(client, monkeypatch):
     assert sent["wa_id"] == "254712345678"
     assert sent["message"] == "auto-reply"
 
+
+# ---------- Webhook button reply ----------
+
+def test_receive_webhook_button_reply_success(client, monkeypatch):
+    received = {}
+
+    def fake_process_message(wa_id, input_value):
+        received["wa_id"] = wa_id
+        received["input_value"] = input_value
+        return "button response"
+
+    monkeypatch.setattr(
+        main,
+        "process_message",
+        fake_process_message
+    )
+
+    sent = {}
+
+    def fake_send(wa_id, message):
+        sent["wa_id"] = wa_id
+        sent["message"] = message
+
+    monkeypatch.setattr(
+        main,
+        "send_whatsapp_message",
+        fake_send
+    )
+
+    response = client.post(
+        "/webhook",
+        json=_button_webhook_payload(
+            wa_id="254712345678"
+        )
+    )
+
+    assert response.status_code == 200
+    assert response.json() == {"status": "success"}
+
+    assert received["wa_id"] == "254712345678"
+    assert received["input_value"] == "explore_sherlock"
+
+    assert sent["wa_id"] == "254712345678"
+    assert sent["message"] == "button response"
+
+
+# ---------- Webhook list reply ----------
+
+def test_receive_webhook_list_reply_success(client, monkeypatch):
+    received = {}
+
+    def fake_process_message(wa_id, input_value):
+        received["wa_id"] = wa_id
+        received["input_value"] = input_value
+        return "list response"
+
+    monkeypatch.setattr(
+        main,
+        "process_message",
+        fake_process_message
+    )
+
+    sent = {}
+
+    def fake_send(wa_id, message):
+        sent["wa_id"] = wa_id
+        sent["message"] = message
+
+    monkeypatch.setattr(
+        main,
+        "send_whatsapp_message",
+        fake_send
+    )
+
+    response = client.post(
+        "/webhook",
+        json=_list_webhook_payload(
+            wa_id="254712345678"
+        )
+    )
+
+    assert response.status_code == 200
+    assert response.json() == {"status": "success"}
+
+    assert received["wa_id"] == "254712345678"
+    assert received["input_value"] == "add_lecturer"
+
+    assert sent["wa_id"] == "254712345678"
+    assert sent["message"] == "list response"
+
+
+# ---------- Other webhook cases ----------
 
 def test_receive_webhook_no_entry(client):
     response = client.post("/webhook", json={
