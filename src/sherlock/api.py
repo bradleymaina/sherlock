@@ -32,14 +32,28 @@ class Lecturer(BaseModel):
         max_length = 10,
         pattern= r"^(07|01)\d{8}$")
 
-#payload
+#payload models
 class TextMessage(BaseModel):
     body: str
+
+class ButtonReply(BaseModel):
+    id: str
+    title: str
+
+class ListReply(BaseModel):
+    id: str
+    title: str
+
+class InteractiveMessage(BaseModel):
+    type: str
+    button_reply: Optional[ButtonReply] = None
+    list_reply: Optional[ListReply] = None
 
 class Message(BaseModel):
     from_number: str = Field(alias="from")
     type: str
     text: Optional[TextMessage] = None
+    interactive: Optional[InteractiveMessage] = None
 
 class Value(BaseModel):
     messages: Optional[list[Message]] = None
