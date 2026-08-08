@@ -37,17 +37,48 @@ def process_message(wa_id, msg):
    
     if state == MENU:
         if msg == "hello":
-            return "Welcome to sherlock.I am a virtual assistant that makes it easy to find lecturers and add them to the database."
+            return [
+    {
+        "type": "text",
+        "body": "Welcome to sherlock. I am a virtual assistant that makes it easy to find lecturers and add them to the database."
+    },
+    {
+        "type": "list",
+        "body": "View Options",
+        "button_title": "Select an option",
+        "rows": [
+            {
+                "id": "add_lecturer",
+                "title": "Add Lecturer",
+                "description": "Add lecturer by providing first name, last name and phone number"
+            },
+            {
+                "id": "search_lecturer",
+                "title": "Search Lecturer",
+                "description": "Search by either first name or last name"
+            }
+        ]
+    }
+]
+        
         
         if msg == "add_lecturer":
             set_state(wa_id, WAITING_FOR_FIRST_NAME) 
-            return "Please enter the lecturer's first name."
+            return {
+                "type": "text",
+                "body": "Please enter the lecturer's first name."
+            }
             
         elif msg == "search_lecturer":
             set_state(wa_id, WAITING_FOR_LECTURER_NAME)
-            return "Please enter the lecturer's name you want to search for."
+            return {
+                "type": "text",
+                "body": "Please enter the lecturer's name you want to search for."
+            }
         else:
-            return "Invalid option!"
+            return {
+                "type": "text",
+                "body": "Invalid option. Please select a valid option from the menu."}
 
     elif state == WAITING_FOR_LECTURER_NAME:
         sessions[wa_id]["lecturer_name"] = msg
@@ -71,12 +102,18 @@ def process_message(wa_id, msg):
     elif state == WAITING_FOR_FIRST_NAME:
         set_state(wa_id, WAITING_FOR_LAST_NAME)
         sessions[wa_id]["first_name"] = msg
-        return "Please enter the lecturer's last name."
+        return {
+            "type": "text",
+            "body": "Please enter the lecturer's last name."    
+        }
 
     elif state == WAITING_FOR_LAST_NAME:
         set_state(wa_id, WAITING_FOR_PHONE_NUMBER)
         sessions[wa_id]["last_name"] = msg
-        return "Please enter the lecturer's phone number."
+        return {
+            "type": "text",
+            "body": "Please enter the lecturer's phone number."
+        }
 
     elif state == WAITING_FOR_PHONE_NUMBER:
         sessions[wa_id]["phone_number"] = msg
@@ -90,10 +127,11 @@ def process_message(wa_id, msg):
 
             del sessions[wa_id]
 
-            return(
-                f"Lecturer {first_name} {last_name} "
-                f"with phone number {phone_number} has been added successfully."
-            )
+            return {
+                "type": "text",
+                "body": f"Lecturer {first_name} {last_name} "
+                        f"with phone number {phone_number} has been added successfully."
+            }
 
         
 
