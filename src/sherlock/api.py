@@ -123,7 +123,55 @@ def send_whatsapp_message(wa_id, message):
     )
 
     return response
-    
+
+def send_whatsapp_list(wa_id, body, button_title, rows):
+    url = f"https://graph.facebook.com/v26.0/{PHONE_NUMBER_ID}/messages"
+
+    headers = {
+        "Authorization": f"Bearer {ACCESS_TOKEN}",
+        "Content-Type": "application/json"
+    }
+
+    payload = {
+        "messaging_product": "whatsapp",
+        "to": wa_id,
+        "type": "interactive",
+        "interactive": {
+            "type": "list",
+            "body": {
+                "text": body
+            },
+            "action": {
+                "button": button_title,
+                "sections": [
+                    {
+                        "rows": rows
+                    }
+                ]
+            }
+        }
+    }
+
+    response = requests.post(
+        url,
+        headers=headers,
+        json=payload
+    )
+
+    return response
+
+rows = [
+    {
+        "id": "add_lecturer",
+        "title": "Add Lecturer",
+        "description": "Add lecturer by providing first name, last name and phone number"
+    },
+    {
+        "id": "search_lecturer",
+        "title": "Search Lecturer",
+        "description": "search by either first name or last name"
+    }
+]
 
 @app.post("/webhook")
 async def receive_webhook(payload: WebhookPayload):
@@ -165,7 +213,7 @@ async def receive_webhook(payload: WebhookPayload):
         reply_text_message = process_message(wa_id, input_value)
         print(f"Replying to {wa_id} with message: {reply_text_message}")
         send_whatsapp_message(wa_id, reply_text_message)
-        
+
         return {"status": "success"}
     
     return {"status": "ignored", "reason": "non-text message"}
