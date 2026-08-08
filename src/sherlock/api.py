@@ -152,4 +152,20 @@ async def receive_webhook(payload: WebhookPayload):
         
         return {"status": "success"}
 
+    elif message.type == "interactive" and message.interactive:
+        wa_id = message.from_number
+        interactive = message.interactive
+
+        if interactive.type == "button_reply" and interactive.button_reply:
+            input_value = interactive.button_reply.id
+
+        elif interactive.type == "list_reply" and interactive.list_reply:
+            input_value = interactive.list_reply.id
+
+        reply_text_message = process_message(wa_id, input_value)
+        print(f"Replying to {wa_id} with message: {reply_text_message}")
+        send_whatsapp_message(wa_id, reply_text_message)
+        
+        return {"status": "success"}
+    
     return {"status": "ignored", "reason": "non-text message"}
