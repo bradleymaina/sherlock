@@ -106,7 +106,9 @@ def process_message(wa_id, msg):
 
                 contact = {
                     "name": {
-                        "formatted_name": full_name
+                        "formatted_name": full_name,
+                        "first_name": first_name,
+                        "last_name": last_name
                     },
                     "phones": [
                         {
