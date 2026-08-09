@@ -174,7 +174,7 @@ rows = [
     }
 ]
 
-def mark_as_read(message_id):
+def format_reply(message_id):
     url = f"https://graph.facebook.com/v26.0/{PHONE_NUMBER_ID}/messages"
     headers = {
         "Authorization": f"Bearer {ACCESS_TOKEN}",
@@ -184,8 +184,10 @@ def mark_as_read(message_id):
     payload = {
         "messaging_product": "whatsapp",
         "status": "read",
-        "message_id": message_id
-        
+        "message_id": message_id,
+        "typing_indicator": {
+            "type": "text"
+        }
     }
 
     response = requests.post(
@@ -212,7 +214,7 @@ async def receive_webhook(payload: WebhookPayload):
     #incoming messages
     message = value.messages[0]
 
-    mark_as_read(message.id)
+    format_reply(message.id)
 
     if message.type == "text" and message.text:
         wa_id = message.from_number
