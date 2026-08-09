@@ -41,21 +41,21 @@ def process_message(wa_id, msg):
             return [
     {
         "type": "text",
-        "body": "Welcome to sherlock. I am a virtual assistant that makes it easy to find lecturers and add them to the database."
+        "body": "🕵️ *Hello. This is Sherlock — built to replace the need to ask around whenever you need a lecturer.*\n\nThe old system was good. It solved the problem through people, groups, questions, and replies. Sherlock is not marginally better than the merely good one. It is an order of magnitude better, measured by whatever standard: conceptual creativity, speed, ingenuity of design, or problem-solving ability.\n\nEvery lecturer and number here was contributed by someone who once needed the same answer. Add what you know; it may be the answer someone else needs tomorrow."
     },
     {
         "type": "list",
-        "body": "View Options",
-        "button_title": "Select an option",
+        "body": "What brings you to Sherlock today? Choose an option from the list below.",
+        "button_title": "Choose your inquiry",
         "rows": [
             {
                 "id": "add_lecturer",
-                "title": "Add Lecturer",
+                "title": "➕ Add a Lecturer",
                 "description": "Add lecturer by providing first name, last name and phone number"
             },
             {
                 "id": "search_lecturer",
-                "title": "Search Lecturer",
+                "title": "🔎 Find a Lecturer",
                 "description": "Search by either first name or last name"
             }
         ]
