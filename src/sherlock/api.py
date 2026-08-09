@@ -101,7 +101,7 @@ def verify_webhook(request: Request):
         status_code=403
     ) 
 
-def send_whatsapp_message(wa_id, message):
+def send_whatsapp_message(wa_id, message, message_id):
     url = f"https://graph.facebook.com/v26.0/{PHONE_NUMBER_ID}/messages"
     headers = {
         "Authorization": f"Bearer {ACCESS_TOKEN}",
@@ -114,6 +114,9 @@ def send_whatsapp_message(wa_id, message):
         "type": "text",
         "text": {
             "body": message
+        },
+        "context": {
+            "message_id": message_id
         }
     }
 
@@ -226,7 +229,8 @@ async def receive_webhook(payload: WebhookPayload):
             if response["type"] == "text":
                 send_whatsapp_message(
                     wa_id,
-                    response["body"]
+                    response["body"],
+                    message.id
                 )   
             elif response["type"] == "list":
                 send_whatsapp_list(
