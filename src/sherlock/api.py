@@ -193,10 +193,21 @@ async def receive_webhook(payload: WebhookPayload):
         wa_id = message.from_number
         msg = message.text.body
 
-        reply_text_message =process_message(wa_id, msg)
-        print(f"Replying to {wa_id} with message: {reply_text_message}")
+        responses = process_message(wa_id, msg)
 
-        send_whatsapp_message(wa_id, reply_text_message)
+        for response in responses:
+            if response["type"] == "text":
+                send_whatsapp_message(
+                    wa_id,
+                    response["body"]
+                )   
+            elif response["type"] == "list":
+                send_whatsapp_list(
+                    wa_id,
+                    response["body"],
+                    response["button_title"],
+                    response["rows"]
+                )
         
         return {"status": "success"}
 
@@ -210,10 +221,21 @@ async def receive_webhook(payload: WebhookPayload):
         elif interactive.type == "list_reply" and interactive.list_reply:
             input_value = interactive.list_reply.id
 
-        reply_text_message = process_message(wa_id, input_value)
-        print(f"Replying to {wa_id} with message: {reply_text_message}")
-        send_whatsapp_message(wa_id, reply_text_message)
+        responses = process_message(wa_id, input_value)
 
+        for response in responses:
+            if response["type"] == "text":
+                send_whatsapp_message(
+                    wa_id,
+                    response["body"]
+                )
+            elif response["type"] == "list":
+                send_whatsapp_list(
+                    wa_id,
+                    response["body"],
+                    response["button_title"],
+                    response["rows"]
+                )
         return {"status": "success"}
     
     return {"status": "ignored", "reason": "non-text message"}
