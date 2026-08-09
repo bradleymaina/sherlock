@@ -221,6 +221,9 @@ async def receive_webhook(payload: WebhookPayload):
         elif interactive.type == "list_reply" and interactive.list_reply:
             input_value = interactive.list_reply.id
 
+        else:
+            return {"status": "ignored", "reason": "unsupported interactive type"}
+
         responses = process_message(wa_id, input_value)
 
         for response in responses:
