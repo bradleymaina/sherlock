@@ -220,6 +220,9 @@ def send_lecturer_contacts(wa_id, result):
     headers=headers,
     json=payload
 )
+    print("CONTACT STATUS:", response.status_code)
+    print("CONTACT RESPONSE:", response.json())
+    print("CONTACT PAYLOAD:", payload)
 
     return response 
 
@@ -287,6 +290,8 @@ async def receive_webhook(payload: WebhookPayload):
 
         for response in responses:
             if response["type"] == "text":
+
+                print("CONTACT RESPONSE FROM CONVERSATION:", response)
                 send_whatsapp_message(
                     wa_id,
                     response["body"],
@@ -299,6 +304,13 @@ async def receive_webhook(payload: WebhookPayload):
                     response["button_title"],
                     response["rows"]
                 )
+
+            elif response["type"] == "contacts":
+                send_lecturer_contacts(
+                    wa_id,
+                    response["data"]
+                )
+                
         return {"status": "success"}
     
     return {"status": "ignored", "reason": "non-text message"}
