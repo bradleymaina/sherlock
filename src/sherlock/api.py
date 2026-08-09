@@ -50,6 +50,7 @@ class InteractiveMessage(BaseModel):
     list_reply: Optional[ListReply] = None
 
 class Message(BaseModel):
+    id: str
     from_number: str = Field(alias="from")
     type: str
     text: Optional[TextMessage] = None
@@ -173,6 +174,28 @@ rows = [
     }
 ]
 
+def mark_as_read(message_id):
+    url = f"https://graph.facebook.com/v26.0/{PHONE_NUMBER_ID}/messages"
+    headers = {
+        "Authorization": f"Bearer {ACCESS_TOKEN}",
+        "Content-Type": "application/json"
+    }
+
+    payload = {
+        "messaging_product": "whatsapp",
+        "status": "read",
+        "message_id": message_id
+        
+    }
+
+    response = requests.post(
+        url,
+        headers=headers,
+        json=payload
+    )
+
+    return response
+
 @app.post("/webhook")
 async def receive_webhook(payload: WebhookPayload):
 
@@ -188,6 +211,8 @@ async def receive_webhook(payload: WebhookPayload):
 
     #incoming messages
     message = value.messages[0]
+
+    mark_as_read(message.id)
 
     if message.type == "text" and message.text:
         wa_id = message.from_number
