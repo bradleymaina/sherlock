@@ -36,6 +36,7 @@ def process_message(wa_id, msg):
         state = MENU
    
     if state == MENU:
+        msg = msg.lower().strip()
         if msg == "hello":
             return [
     {
