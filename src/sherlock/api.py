@@ -261,8 +261,7 @@ async def receive_webhook(payload: WebhookPayload):
             if response["type"] == "text":
                 send_whatsapp_message(
                     wa_id,
-                    response["body"],
-                    message.id
+                    response["body"]
                 )
             elif response["type"] == "list":
                 send_whatsapp_list(
