@@ -1,4 +1,5 @@
 from .database import add_lecturer, lecturer_lookup
+from .utils import format_phone_number
 
 MENU = "MENU"
 
@@ -99,7 +100,7 @@ def process_message(wa_id, msg):
             for lecturer in result["data"]:
                 first_name = lecturer["first_name"]
                 last_name = lecturer["last_name"]
-                phone_number = lecturer["phone_number"]
+                phone_number = format_phone_number(lecturer["phone_number"])
 
                 full_name = f"{first_name} {last_name}"
 
