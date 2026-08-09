@@ -92,18 +92,26 @@ def process_message(wa_id, msg):
         result = lecturer_lookup(sessions[wa_id]["lecturer_name"])
 
         if result["status"] == "success":
-            response = ""
+            response = []
             for lecturer in result["data"]:
                 first_name = lecturer["first_name"]
                 last_name = lecturer["last_name"]
                 phone_number = lecturer["phone_number"]
-                response += f" {first_name} {last_name} : {phone_number}.\n"
+                response.append({
+                    "type": "text",
+                    "body": f" {first_name} {last_name} : {phone_number}."
+                })
 
             del sessions[wa_id]
-            return response.strip()
+            return response
 
         elif result["status"] == "error":
-            return result["message"]
+            return [
+                {
+                "type": "text",
+                "body": result["message"]
+            }
+            ]
 
     elif state == WAITING_FOR_FIRST_NAME:
         set_state(wa_id, WAITING_FOR_LAST_NAME)
