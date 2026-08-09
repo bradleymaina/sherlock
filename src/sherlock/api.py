@@ -201,6 +201,29 @@ def format_reply(message_id):
 
     return response
 
+def send_lecturer_contacts(wa_id, result):
+    url = f"https://graph.facebook.com/v26.0/{PHONE_NUMBER_ID}/messages"
+    headers = {
+        "Authorization": f"Bearer {ACCESS_TOKEN}",
+        "Content-Type": "application/json"
+    }
+
+    payload = {
+        "messaging_product": "whatsapp",
+        "to": wa_id,
+        "type": "contacts",
+        "contacts": result
+    }
+
+    response = requests.post(
+    url,
+    headers=headers,
+    json=payload
+)
+
+    return response 
+
+
 @app.post("/webhook")
 async def receive_webhook(payload: WebhookPayload):
 
@@ -238,6 +261,11 @@ async def receive_webhook(payload: WebhookPayload):
                     response["body"],
                     response["button_title"],
                     response["rows"]
+                )
+            elif response["type"] == "contacts":
+                send_lecturer_contacts(
+                    wa_id,
+                    response["data"]
                 )
         
         return {"status": "success"}
