@@ -113,6 +113,7 @@ def process_message(wa_id, msg):
                     "phones": [
                         {
                             "phone": phone_number,
+                            "wa_id": phone_number.lstrip("+")
                         }
                     ]
                 }
