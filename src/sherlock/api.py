@@ -1,5 +1,5 @@
 import os
-import requests
+import httpx
 import time
 from dotenv import load_dotenv
 from fastapi import FastAPI , Request
@@ -102,7 +102,7 @@ def verify_webhook(request: Request):
         status_code=403
     ) 
 
-def send_whatsapp_message(wa_id, message, message_id):
+async def send_whatsapp_message(wa_id, message, message_id):
     url = f"https://graph.facebook.com/v26.0/{PHONE_NUMBER_ID}/messages"
     headers = {
         "Authorization": f"Bearer {ACCESS_TOKEN}",
@@ -121,15 +121,17 @@ def send_whatsapp_message(wa_id, message, message_id):
         }
     }
 
-    response  = requests.post(
-        url,
-        headers=headers,
-        json= payload 
-    )
+    async with httpx.AsyncClient() as client:
+
+        response  = await client.post(
+            url,
+            headers=headers,
+            json= payload 
+        )
 
     return response
 
-def send_whatsapp_list(wa_id, body, button_title, rows):
+async def send_whatsapp_list(wa_id, body, button_title, rows):
     url = f"https://graph.facebook.com/v26.0/{PHONE_NUMBER_ID}/messages"
 
     headers = {
@@ -157,11 +159,13 @@ def send_whatsapp_list(wa_id, body, button_title, rows):
         }
     }
 
-    response = requests.post(
-        url,
-        headers=headers,
-        json=payload
-    )
+    async with httpx.AsyncClient() as client: 
+
+        response = await client.post(
+            url,
+            headers=headers,
+            json=payload
+        )
 
     return response
 
@@ -178,7 +182,7 @@ rows = [
     }
 ]
 
-def format_reply(message_id):
+async def format_reply(message_id):
     url = f"https://graph.facebook.com/v26.0/{PHONE_NUMBER_ID}/messages"
     headers = {
         "Authorization": f"Bearer {ACCESS_TOKEN}",
@@ -194,15 +198,17 @@ def format_reply(message_id):
         }
     }
 
-    response = requests.post(
-        url,
-        headers=headers,
-        json=payload
-    )
+    async with httpx.AsyncClient() as client:
+
+        response = await client.post(
+            url,
+            headers=headers,
+            json=payload
+        )
 
     return response
 
-def send_lecturer_contacts(wa_id, result):
+async def send_lecturer_contacts(wa_id, result):
     url = f"https://graph.facebook.com/v26.0/{PHONE_NUMBER_ID}/messages"
     headers = {
         "Authorization": f"Bearer {ACCESS_TOKEN}",
@@ -216,11 +222,13 @@ def send_lecturer_contacts(wa_id, result):
         "contacts": result
     }
 
-    response = requests.post(
-    url,
-    headers=headers,
-    json=payload
-)
+    async with httpx.AsyncClient() as client:
+
+        response = await client.post(
+        url,
+        headers=headers,
+        json=payload
+    )
     print("CONTACT STATUS:", response.status_code)
     print("CONTACT RESPONSE:", response.json())
     print("CONTACT PAYLOAD:", payload)
@@ -246,7 +254,7 @@ async def receive_webhook(payload: WebhookPayload):
 
     start = time.perf_counter()
 
-    format_reply(message.id)
+    await format_reply(message.id)
 
     print(
         f"format reply: {(time.perf_counter() - start ) * 1000 :2f} ms"
@@ -269,7 +277,7 @@ async def receive_webhook(payload: WebhookPayload):
 
                 start = time.perf_counter()
 
-                send_whatsapp_message(
+                await send_whatsapp_message(
                     wa_id,
                     response["body"],
                     message.id
@@ -282,7 +290,7 @@ async def receive_webhook(payload: WebhookPayload):
 
                 start = time.perf_counter()
 
-                send_whatsapp_list(
+                await send_whatsapp_list(
                     wa_id,
                     response["body"],
                     response["button_title"],
@@ -297,7 +305,7 @@ async def receive_webhook(payload: WebhookPayload):
 
                 start = time.perf_counter()
 
-                send_lecturer_contacts(
+                await send_lecturer_contacts(
                     wa_id,
                     response["data"]
                 )
@@ -337,7 +345,7 @@ async def receive_webhook(payload: WebhookPayload):
 
                 start = time.perf_counter()
 
-                send_whatsapp_message(
+                await send_whatsapp_message(
                     wa_id,
                     response["body"],
                     message.id
@@ -352,7 +360,7 @@ async def receive_webhook(payload: WebhookPayload):
 
                 start = time.perf_counter()
 
-                send_whatsapp_list(
+                await send_whatsapp_list(
                     wa_id,
                     response["body"],
                     response["button_title"],
@@ -368,7 +376,7 @@ async def receive_webhook(payload: WebhookPayload):
 
                 start = time.perf_counter()
 
-                send_lecturer_contacts(
+                await send_lecturer_contacts(
                     wa_id,
                     response["data"]
                 )
