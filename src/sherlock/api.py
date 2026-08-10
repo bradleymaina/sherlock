@@ -13,6 +13,7 @@ from .conversation import process_message
 app = FastAPI()
 load_dotenv()
 
+client = httpx.AsyncClient()
 
 PHONE_NUMBER_ID = os.getenv("WHATSAPP_PHONE_NUMBER_ID")
 ACCESS_TOKEN = os.getenv("WHATSAPP_ACCESS_TOKEN")
@@ -121,13 +122,11 @@ async def send_whatsapp_message(wa_id, message, message_id):
         }
     }
 
-    async with httpx.AsyncClient() as client:
-
-        response  = await client.post(
-            url,
-            headers=headers,
-            json= payload 
-        )
+    response  = await client.post(
+        url,
+        headers=headers,
+        json= payload 
+    )
 
     return response
 
@@ -159,13 +158,11 @@ async def send_whatsapp_list(wa_id, body, button_title, rows):
         }
     }
 
-    async with httpx.AsyncClient() as client: 
-
-        response = await client.post(
-            url,
-            headers=headers,
-            json=payload
-        )
+    response = await client.post(
+        url,
+        headers=headers,
+        json=payload
+    )
 
     return response
 
@@ -198,13 +195,11 @@ async def format_reply(message_id):
         }
     }
 
-    async with httpx.AsyncClient() as client:
-
-        response = await client.post(
-            url,
-            headers=headers,
-            json=payload
-        )
+    response = await client.post(
+        url,
+        headers=headers,
+        json=payload
+    )
 
     return response
 
@@ -222,9 +217,8 @@ async def send_lecturer_contacts(wa_id, result):
         "contacts": result
     }
 
-    async with httpx.AsyncClient() as client:
-
-        response = await client.post(
+    
+    response = await client.post(
         url,
         headers=headers,
         json=payload
