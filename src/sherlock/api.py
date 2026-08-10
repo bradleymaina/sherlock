@@ -1,6 +1,7 @@
 import os
 import httpx
 import time
+import asyncio
 from dotenv import load_dotenv
 from fastapi import FastAPI , Request
 from fastapi.responses import PlainTextResponse 
@@ -248,12 +249,8 @@ async def receive_webhook(payload: WebhookPayload):
 
     start = time.perf_counter()
 
-    await format_reply(message.id)
-
-    print(
-        f"format reply: {(time.perf_counter() - start ) * 1000 :2f} ms"
-    )
-
+    asyncio.create_task(format_reply(message.id))
+    
     if message.type == "text" and message.text:
         wa_id = message.from_number
         msg = message.text.body
