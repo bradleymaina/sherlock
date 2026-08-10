@@ -1,5 +1,6 @@
 import os
 import requests
+import time
 from dotenv import load_dotenv
 from fastapi import FastAPI , Request
 from fastapi.responses import PlainTextResponse 
@@ -243,32 +244,66 @@ async def receive_webhook(payload: WebhookPayload):
     #incoming messages
     message = value.messages[0]
 
+    start = time.perf_counter()
+
     format_reply(message.id)
+
+    print(
+        f"format reply: {(time.perf_counter() - start ) * 1000 :2f} ms"
+    )
 
     if message.type == "text" and message.text:
         wa_id = message.from_number
         msg = message.text.body
 
+        start = time.perf_counter()
+
         responses = process_message(wa_id, msg)
+
+        print(
+            f"process message: {(time.perf_counter() - start ) * 1000 :2f} ms"
+        )
 
         for response in responses:
             if response["type"] == "text":
+
+                start = time.perf_counter()
+
                 send_whatsapp_message(
                     wa_id,
                     response["body"],
                     message.id
                 )   
+
+                print(
+                    f"send message: {(time.perf_counter() - start) * 1000 :2f} ms"
+                )
             elif response["type"] == "list":
+
+                start = time.perf_counter()
+
                 send_whatsapp_list(
                     wa_id,
                     response["body"],
                     response["button_title"],
                     response["rows"]
                 )
+
+                print(
+                    f"sending list: {(time.perf_counter() - start) * 1000:2f} ms"
+                )
+
             elif response["type"] == "contacts":
+
+                start = time.perf_counter()
+
                 send_lecturer_contacts(
                     wa_id,
                     response["data"]
+                )
+
+                print(
+                    f"contact message: {(time.perf_counter() - start) * 1000 :2f} ms"
                 )
         
         return {"status": "success"}
@@ -286,18 +321,37 @@ async def receive_webhook(payload: WebhookPayload):
         else:
             return {"status": "ignored", "reason": "unsupported interactive type"}
 
+        start = time.perf_counter()
+
         responses = process_message(wa_id, input_value)
+
+        print(
+            f"interactive process message:"
+            f"{(time.perf_counter() - start )*1000:2f} ms"
+        )
 
         for response in responses:
             if response["type"] == "text":
 
                 print("CONTACT RESPONSE FROM CONVERSATION:", response)
+
+                start = time.perf_counter()
+
                 send_whatsapp_message(
                     wa_id,
                     response["body"],
                     message.id
                 )
+
+                print(
+                    f"interactive send message:"
+                    f"{(time.perf_counter() - start)*1000:2f} ms"
+                )
+
             elif response["type"] == "list":
+
+                start = time.perf_counter()
+
                 send_whatsapp_list(
                     wa_id,
                     response["body"],
@@ -305,10 +359,23 @@ async def receive_webhook(payload: WebhookPayload):
                     response["rows"]
                 )
 
+                print(
+                    f"interactive send list"
+                    f"{(time.perf_counter() - start ) * 1000:2f}ms"
+                )
+
             elif response["type"] == "contacts":
+
+                start = time.perf_counter()
+
                 send_lecturer_contacts(
                     wa_id,
                     response["data"]
+                )
+
+                print(
+                    f"interactive send contacts"
+                    f"{(time.perf_counter() - start) * 1000:2f} ms"
                 )
                 
         return {"status": "success"}
