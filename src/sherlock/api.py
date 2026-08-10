@@ -7,14 +7,27 @@ from fastapi import FastAPI , Request
 from fastapi.responses import PlainTextResponse 
 from pydantic import BaseModel, Field
 from typing import  Optional
+from contextlib import asynccontextmanager
 
 from .database import add_lecturer , lecturer_lookup
 from .conversation import process_message
 
-app = FastAPI()
 load_dotenv()
 
-client = httpx.AsyncClient()
+client = None
+
+@asynccontextmanager
+async def lifespan(app: FastAPI):
+    global client
+
+    client = httpx.AsyncClient()
+
+    yield
+
+    await client.aclose()
+
+
+app = FastAPI(lifespan = lifespan)
 
 PHONE_NUMBER_ID = os.getenv("WHATSAPP_PHONE_NUMBER_ID")
 ACCESS_TOKEN = os.getenv("WHATSAPP_ACCESS_TOKEN")
@@ -250,7 +263,7 @@ async def receive_webhook(payload: WebhookPayload):
     start = time.perf_counter()
 
     asyncio.create_task(format_reply(message.id))
-    
+
     if message.type == "text" and message.text:
         wa_id = message.from_number
         msg = message.text.body
