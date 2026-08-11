@@ -4,9 +4,9 @@ import sqlite3
 
 def get_db():
     #uncomment this line
-    #database = 'sherlock.db'
+    database = 'sherlock.db'
     #comment this line out 
-    database = 'lecturer.db'
+    #database = 'lecturer.db'
     connection = sqlite3.connect(database)
     return connection, connection.cursor()
 
