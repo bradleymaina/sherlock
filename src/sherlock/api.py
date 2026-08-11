@@ -52,18 +52,37 @@ class Lecturer(BaseModel):
 class TextMessage(BaseModel):
     body: str
 
+
 class ButtonReply(BaseModel):
     id: str
     title: str
+
 
 class ListReply(BaseModel):
     id: str
     title: str
 
+
 class InteractiveMessage(BaseModel):
     type: str
     button_reply: Optional[ButtonReply] = None
     list_reply: Optional[ListReply] = None
+
+
+class ContactName(BaseModel):
+    formatted_name: str
+
+
+class ContactPhone(BaseModel):
+    phone: str
+    wa_id: Optional[str] = None
+    type: Optional[str] = None
+
+
+class Contact(BaseModel):
+    name: ContactName
+    phones: list[ContactPhone]
+
 
 class Message(BaseModel):
     id: str
@@ -71,9 +90,12 @@ class Message(BaseModel):
     type: str
     text: Optional[TextMessage] = None
     interactive: Optional[InteractiveMessage] = None
+    contacts: Optional[list[Contact]] = None
+
 
 class Value(BaseModel):
     messages: Optional[list[Message]] = None
+
 
 class Change(BaseModel):
     value: Value
@@ -82,9 +104,11 @@ class Change(BaseModel):
 class Entry(BaseModel):
     changes: list[Change]
 
+
 class WebhookPayload(BaseModel):
     object: Optional[str]
     entry: list[Entry]
+
 
 
 @app.post("/lecturers")
