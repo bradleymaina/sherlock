@@ -284,6 +284,8 @@ async def receive_webhook(payload: WebhookPayload):
     #incoming messages
     message = value.messages[0]
 
+    print("MESSAGE TYPE:", message.type)
+
     start = time.perf_counter()
 
     asyncio.create_task(format_reply(message.id))
