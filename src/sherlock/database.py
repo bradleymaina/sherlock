@@ -29,7 +29,7 @@ def add_lecturer(first_name, last_name, phone_number):
 
     first_name = first_name.strip().title()
     last_name = last_name.strip().title()
-    phone_number = phone_number.strip()
+    phone_number = phone_number.strip().replace(" " ,"")
 
     #validate name later
     
