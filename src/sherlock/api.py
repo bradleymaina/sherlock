@@ -288,7 +288,18 @@ async def receive_webhook(payload: WebhookPayload):
 
     asyncio.create_task(format_reply(message.id))
 
-    if message.type == "text" and message.text:
+    if message.type == "contacts" and message.contacts:
+        contact = message.contact[0]
+
+        formatted_name = contact.name.formatted_name
+        phone_number = contact.phones[0].phone
+
+        print(f"CONTACT_NAME: {formatted_name}")
+        print(f"PHONE_NUMBER: {formatted_name}")
+
+        return{"status": "contact recieved"}
+
+    elif message.type == "text" and message.text:
         wa_id = message.from_number
         msg = message.text.body
 
