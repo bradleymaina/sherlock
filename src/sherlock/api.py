@@ -237,9 +237,9 @@ async def send_lecturer_contacts(wa_id, result):
         headers=headers,
         json=payload
     )
-    print("CONTACT STATUS:", response.status_code)
-    print("CONTACT RESPONSE:", response.json())
-    print("CONTACT PAYLOAD:", payload)
+   #  print("CONTACT STATUS:", response.status_code)
+   # print("CONTACT RESPONSE:", response.json())
+   # print("CONTACT PAYLOAD:", payload)
 
     return response 
 
@@ -272,9 +272,9 @@ async def receive_webhook(payload: WebhookPayload):
 
         responses = process_message(wa_id, msg)
 
-        print(
-            f"process message: {(time.perf_counter() - start ) * 1000 :2f} ms"
-        )
+         # print(
+         #   f"process message: {(time.perf_counter() - start ) * 1000 :2f} ms"
+         # )
 
         for response in responses:
             if response["type"] == "text":
@@ -287,9 +287,9 @@ async def receive_webhook(payload: WebhookPayload):
                     message.id
                 )   
 
-                print(
-                    f"send message: {(time.perf_counter() - start) * 1000 :2f} ms"
-                )
+               # print(
+               #     f"send message: {(time.perf_counter() - start) * 1000 :2f} ms"
+               # )
             elif response["type"] == "list":
 
                 start = time.perf_counter()
@@ -301,9 +301,9 @@ async def receive_webhook(payload: WebhookPayload):
                     response["rows"]
                 )
 
-                print(
-                    f"sending list: {(time.perf_counter() - start) * 1000:2f} ms"
-                )
+                 #print(
+                 #   f"sending list: {(time.perf_counter() - start) * 1000:2f} ms"
+                 # )
 
             elif response["type"] == "contacts":
 
@@ -314,9 +314,9 @@ async def receive_webhook(payload: WebhookPayload):
                     response["data"]
                 )
 
-                print(
-                    f"contact message: {(time.perf_counter() - start) * 1000 :2f} ms"
-                )
+                # print(
+                #    f"contact message: {(time.perf_counter() - start) * 1000 :2f} ms"
+                #)
         
         return {"status": "success"}
 
@@ -337,15 +337,15 @@ async def receive_webhook(payload: WebhookPayload):
 
         responses = process_message(wa_id, input_value)
 
-        print(
-            f"interactive process message:"
-            f"{(time.perf_counter() - start )*1000:2f} ms"
-        )
+       # print(
+       #    f"interactive process message:"
+       #    f"{(time.perf_counter() - start )*1000:2f} ms"
+       # )
 
         for response in responses:
             if response["type"] == "text":
 
-                print("CONTACT RESPONSE FROM CONVERSATION:", response)
+               # print("CONTACT RESPONSE FROM CONVERSATION:", response)
 
                 start = time.perf_counter()
 
@@ -355,10 +355,10 @@ async def receive_webhook(payload: WebhookPayload):
                     message.id
                 )
 
-                print(
-                    f"interactive send message:"
-                    f"{(time.perf_counter() - start)*1000:2f} ms"
-                )
+               # print(
+               #    f"interactive send message:"
+               #     f"{(time.perf_counter() - start)*1000:2f} ms"
+               #)
 
             elif response["type"] == "list":
 
@@ -371,10 +371,10 @@ async def receive_webhook(payload: WebhookPayload):
                     response["rows"]
                 )
 
-                print(
-                    f"interactive send list"
-                    f"{(time.perf_counter() - start ) * 1000:2f}ms"
-                )
+                #print(
+                #    f"interactive send list"
+                #    f"{(time.perf_counter() - start ) * 1000:2f}ms"
+                #)
 
             elif response["type"] == "contacts":
 
@@ -385,10 +385,10 @@ async def receive_webhook(payload: WebhookPayload):
                     response["data"]
                 )
 
-                print(
-                    f"interactive send contacts"
-                    f"{(time.perf_counter() - start) * 1000:2f} ms"
-                )
+               # print(
+               #    f"interactive send contacts"
+               #    f"{(time.perf_counter() - start) * 1000:2f} ms"
+               # )
                 
         return {"status": "success"}
     
